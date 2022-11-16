@@ -1,0 +1,33 @@
+syntax = "proto3";
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+// GossipRaw used to receive args for gossip message.
+message GossipRaw{
+
+  // DataType the type of data.
+  GossipDataType dataType = 1;
+
+  // MsgCode the msgCode of module which will process the message.
+  uint64 msgCode = 2;
+
+  GossipNsData data = 3;
+
+  // SelectPeer reserved filed.
+  // used to specify the proxy for select peer to gossip.
+  //string selectPeer = 3;
+}
+
+message GossipNsData{
+  // Data gossip message's data.
+  bytes data = 1;
+  // GossipNodeType gossip node type.
+  repeated string peerType = 2;
+  // Protocol the protocol this ns use.
+  string protocol = 3;
+}
+
+enum GossipDataType {
+  DefaultType = 0;
+}

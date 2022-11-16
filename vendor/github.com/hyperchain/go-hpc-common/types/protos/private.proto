@@ -1,0 +1,68 @@
+/*
+Copyright Flato Corp. 2016 All Rights Reserved.
+*/
+
+syntax = "proto3";
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/transaction.proto";
+
+package protos;
+
+message private_message {
+    enum Type {
+       PRIVATE_SYNC = 0;
+       PRIVATE_SYNC_RESPONSE = 1;
+       PRIVATE_QUERY = 2;
+       PRIVATE_QUERY_RESPONSE = 3;
+       PRIVATE_FETCH = 4;
+       PRIVATE_FETCH_RESPONSE = 5;
+    }
+    Type type = 1;
+    bytes payload = 2;
+}
+
+message private_sync {
+    string from = 1;
+    bytes data = 2;
+}
+
+message private_sync_response {
+    string from = 1;
+    string hash = 2;
+}
+
+message private_query {
+    string from = 1;
+    string hash = 2;
+}
+
+message private_query_response {
+    enum ErrType {
+        NORMAL = 0;
+        NOTFOUND = 1;
+        OUTOFBALANCE = 2;
+        SIGFAILED = 3;
+        INVOKE_CONTRACT_FAILED = 4;
+        DEPLOY_CONTRACT_FAILED = 5;
+        INVALID_PERMISSION = 6;
+        UNKNOWN = 7;
+    }
+    string from = 1;
+    string hash = 2;
+    ErrType type = 3;
+    bytes receipt = 4;
+}
+
+message private_fetch {
+    string from = 1;
+    repeated string txHashList = 2;
+    bool force = 3;
+}
+
+message private_fetch_response {
+    string from = 1;
+    repeated Transaction txList = 2;
+    bool force = 3;
+}

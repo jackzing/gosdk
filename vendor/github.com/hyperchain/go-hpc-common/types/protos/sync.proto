@@ -1,0 +1,179 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/block.proto";
+import "github.com/hyperchain/go-hpc-common/types/protos/checkpoint.proto";
+
+message Error {
+  string Err = 1;
+}
+
+message TaskInfo {
+  uint64 nonce = 1;
+  uint64 id = 2;
+}
+
+message FetchBlockHeaderRequest {
+  TaskInfo info = 1;
+  uint64 start = 2;
+  uint64 end = 3;
+  string sender = 4;
+}
+
+message FetchBlockHeaderResponse {
+  TaskInfo info = 1;
+  repeated Block block = 2;
+  string sender = 3;
+  Error err = 4;
+}
+
+message NegotiateRequest {
+  int64 Nonce = 1;
+  bytes Data = 2;
+}
+
+message BlockNegotiateRequest {
+  uint64 ChainHeight = 1;
+  uint64 TargetHeight = 2;
+  bytes TargetHash = 3;
+}
+
+message NegotiateResponse {
+  string Sender = 1;
+  int64 Nonce = 2;
+  Error err = 3;
+  bytes Data = 4;
+}
+
+message BlockNegotiateResponse {
+  uint64 Genesis = 1;
+  uint64 VersionSplit = 2;
+  bytes VersionSplitTxRoot = 3;
+  string Sender = 4;
+  SnapshotInfo HighestSnapshot = 5;
+  SnapshotInfo LowestSnapshot = 6;
+  string TxVersion = 7;
+  EpochInfo epoch = 8;
+}
+
+message SnapshotInfo {
+  uint64 Height = 1;
+  uint64 TxNum = 2;
+  uint64 InvalidTxNum = 3;
+  uint64 Size = 4;
+  string FilterID = 5;
+}
+
+message FetchGenesisRequest {
+  TaskInfo Info = 1;
+  uint64 Height = 2;
+}
+
+message FetchGenesisResponse {
+  TaskInfo Info = 1;
+  uint64 Height = 2;
+  BJRPacket payload = 3;
+  Error err = 4;
+}
+
+message BJRPacket {
+  bytes blockWrapper = 1;
+  bytes journal = 2;
+  bytes receiptWrapper = 3;
+  uint64 Number = 4;
+}
+
+message FetchHPCBlocksRequest {
+  TaskInfo Info = 1;
+  uint64 Start = 2;
+  uint64 End = 3;
+}
+
+message FetchHPCBlocksResponse {
+  TaskInfo Info = 1;
+  BJRPacket BJR = 2;
+  Error err = 3;
+}
+
+message FetchLedgerRequest {
+  TaskInfo Info = 1;
+  uint64 Position = 2;
+  uint64 PartSize = 3;
+  string FilterID = 4;
+}
+
+message FetchLedgerResponse {
+  TaskInfo Info = 1;
+  bytes Ledger = 2;
+  bytes Checksum = 3;
+  uint64 Position = 4;
+  Error err = 5;
+}
+
+message FetchBlockRequest {
+  TaskInfo Info = 1;
+  uint64 Start = 2;
+  uint64 End = 3;
+  bool NeedJournal = 4;
+  bool NeedReceipt = 5;
+}
+
+message FetchBlockResponse {
+  TaskInfo Info = 1;
+  repeated BJRPacket payload = 2;
+  Error err = 3;
+}
+
+message SyncMsg {
+  enum Typ {
+    NegotiateReq = 0;
+    NegotiateResp = 1;
+    FetchHPCBlockReq = 2;
+    FetchHPCBlockResp = 3;
+    FetchHeaderReq = 4;
+    FetchHeaderResp = 5;
+    FetchLedgerReq = 6;
+    FetchLedgerResp = 7;
+    FetchGenesisReq = 8;
+    FetchGenesisResp = 9;
+    FetchBlockReq = 10;
+    FetchBlockResp = 11;
+  }
+  Typ typ = 1;
+  bytes payload = 2;
+}
+
+message EpochMsg {
+  enum Typ {
+    NegotiateReq = 0;
+    NegotiateResp = 1;
+    FetchReq = 2;
+    FetchResp = 3;
+  }
+  Typ typ = 1;
+  bytes payload = 2;
+}
+
+message EpochNegotiateRequest {
+  uint64 TargetEpoch = 1;
+  uint64 InitEpoch = 2;
+}
+
+message EpochNegotiateResponse {
+
+}
+
+message FetchEpochRequest {
+  TaskInfo Info = 1;
+  uint64 Start = 2;
+  uint64 End = 3;
+}
+
+message FetchEpochResponse {
+  TaskInfo Info = 1;
+  repeated QuorumCheckpoint checkpoints = 2;
+  Error err = 3;
+}

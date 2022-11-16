@@ -1,0 +1,94 @@
+#!/bin/bash
+
+blockchain=${1}
+https=${3}
+function startNodes() {
+  pkill -9 flato
+  pkill -9 cedar
+  pkill -9 hyperchain
+  cd ${2}
+  echo ${2}
+
+  for ((i = 1; i <= 4; i++)); do
+    cd node${i}
+    chmod +x ${1}
+    CommitNum=$(./${1} --codeVersion)
+    echo $CommitNum
+    ./${1} >node${i}.log 2>&1 &
+    cd ..
+  done
+}
+
+function checkNodeStatus() {
+  for ((j = 1; j <= 120; j++)); do
+    sleep 1
+    result=$(curl localhost:8081 --data '{"jsonrpc":"2.0","method": "node_getNodeStates", "namespace": "global", "id": 1}')
+    if [[ "$result" =~ "NORMAL" ]]; then
+      echo 'Nodes started successfully!'
+      echo "Spent ${j} seconds"
+      break
+    else
+      if [[ "${j}" != 120 ]]; then
+        echo "Nodes not started"
+      else
+        echo "Nodes startup failed within 120 seconds"
+        exit 1
+      fi
+    fi
+  done
+  echo "checkout nodes status again :"
+  echo "curl localhost:8081 --data '{\"jsonrpc\":\"2.0\",\"method\": \"node_getNodeStates\", \"namespace\": \"global\", \"id\": 1}'"
+  echo "cat nodes logs :"
+  echo "tail -f ${2}/node1/node1.log"
+  echo "tail -f ${2}/node2/node2.log"
+  echo "tail -f ${2}/node3/node3.log"
+  echo "tail -f ${2}/node4/node4.log"
+}
+
+case ${blockchain} in
+"flato")
+  path="${WORKSPACE}/testEnv/0.0"
+  if [[ ${https} == "https" ]]; then
+    startNodes ${blockchain} ${path} ${https}
+    echo "not checkNodeStatus"
+  else
+    startNodes ${blockchain} ${path}
+    checkNodeStatus ${blockchain} ${path}
+  fi
+  ;;
+
+"hyperchain")
+  echo "start hyperchain"
+  path="${WORKSPACE}/testEnv/1.8"
+  if [[ ${https} == "https" ]]; then
+    startNodes ${blockchain} ${path} ${https}
+    echo "not checkNodeStatus"
+  else
+    startNodes ${blockchain} ${path}
+    checkNodeStatus ${blockchain} ${path}
+  fi
+  ;;
+
+"cedar")
+  echo "cedar"
+  path="${WORKSPACE}/testEnv/0.0"
+  if [[ ${https} == "https" ]]; then
+    startNodes ${blockchain} ${path} ${https}
+    echo "not checkNodeStatus"
+  else
+    startNodes ${blockchain} ${path}
+    checkNodeStatus ${blockchain} ${path}
+  fi
+  ;;
+"help")
+  echo "sh start_nodes.sh cedar --exec cedar blochain"
+  echo "sh start_nodes.sh hyperchian -- exec hyperchain blockchain"
+  echo "sh start_nodes.sh flato --exec flato blockchain"
+  echo "sh start_nodes.sh flato /home/hyperchain/jenkins/workspace/testEnv/0.0 https --exec flato blockchain https"
+  ;;
+*)
+  echo "cat script methods by executing the following command  : "
+  echo "sh start_nodes.sh help"
+  ;;
+
+esac

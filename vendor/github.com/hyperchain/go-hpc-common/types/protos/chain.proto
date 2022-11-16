@@ -1,0 +1,16 @@
+syntax = "proto3";
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+message Chain {
+  bytes latestBlockHash = 1;
+  bytes parentBlockHash = 2;
+  uint64 height = 3;
+  uint64 requiredBlockNum = 4;
+  bytes requireBlockHash = 5;
+  uint64 recoveryNum = 6;
+  uint64 currentTxSum = 7;
+  bytes  extra = 8;
+  uint64 invalidTxSum = 9;
+}

@@ -1,0 +1,284 @@
+#!/bin/bash
+echo "gitlabSourceRepoName :$gitlabSourceRepoName"
+echo "gitlabMergeRequestDescription :$gitlabMergeRequestDescription"
+echo "gitlabTargetBranch : $gitlabTargetBranch"
+echo "gitlabSourceBranch" :$gitlabSourceBranch
+
+gitlabSourceBranch=$gitlabSourceBranch
+gitlabSourceRepoName=$gitlabSourceRepoName
+gitlabMergeRequestDescription=$gitlabMergeRequestDescription
+tag=$gitlabTargetBranch
+version=${5:-latest}
+
+if [[ $1 == *"-h"* ]]; then
+  echo "功能 : 拉取文件系统的 区块链包，复制到testEnv,修改成4节点配置后，启动"
+  echo "step 0 根据输入的参数 选择拉取的 区块链平台包： ex: hyperchain  或flato"
+  echo " step 1: 拉取文件系统上的 包： http://nexus.hyperchain.cn/repository/hyper-test/binary/"
+  echo "step 3: 根据区块链平台 修改配置, 将修改配置后的包复制到testEnv里"
+  echo " ==============================================================="
+  echo "======================使用======================================="
+  echo "sh prepare_nodes.sh blockchain branch 注： branch 如果匹配不到 默认拉smoke的包"
+  echo "举例说明: "
+  echo "      sh prepare_nodes.sh flato  拉取 flato00.tar.gz的包(branch 不传默认为tag)"
+  echo "      sh prepare_nodes.sh flato tag/v1.0.2 拉取 flato00-coverage.tar.gz的包（发版后触发）"
+  echo "      sh prepare_nodes.sh flato tag 拉取 flato00.tar.gz的包"
+  echo "      sh prepare_nodes.sh flato pre-release 拉取 flato00-release的包"
+  echo "      sh prepare_nodes.sh flato smoke 拉取flato00-smoke的包  (如果匹配不到 默认拉smoke的包)"
+  echo "      sh prepare_nodes.sh flato smoke true 拉取本地文件"
+  echo "      sh prepare_nodes.sh flato smoke false smoke-package-name 拉取冒烟包"
+  exit
+fi
+
+blockchain=${1}
+echo "BRANCH:" $BRANCH
+NEW_HYPERCHAIN=$1
+BIN_IN_LOCAL=${3:-false}
+echo "bin :"$BIN_IN_LOCAL
+nodeN=4
+BLOCKCHAIN=${NEW_HYPERCHAIN:-hyperchain}
+gitlabSourceBranch=$4
+echo "Get flato source pakage, version and branch"
+curl -O http://nexus.hyperchain.cn/repository/hyper-test/scripts/get_package_and_version.sh
+get_result=`sh get_package_and_version.sh`
+array=(${get_result//,/ })
+package="hyperchain2_7_0"  # package 为对应的测试包名
+version=${array[1]}  # version 为包对应的迭代版本号
+BRANCH=${array[2]}  # BRANCH 为具体触发的分支：tag，smoke，coverage或其他定制版本
+echo "version:" ${version}
+
+function prepare_flato() {
+  pkill flato
+  pkill cedar
+  pkill hyperchain
+  jps | grep JceeServer | awk '{print $1}' | xargs kill -9
+
+
+  sourceDir=${blockchain}0.0
+  nodeName=${blockchain}
+
+ if [ ${BIN_IN_LOCAL} == "false" ]; then
+    echo http://nexus.hyperchain.cn/repository/hyper-test/binary/${blockchain}/Centos7/${package}.tar.gz
+    curl -O http://nexus.hyperchain.cn/repository/hyper-test/binary/${blockchain}/Centos7/${package}.tar.gz
+    if [ $? == 0 ]; then
+      echo http://nexus.hyperchain.cn/repository/hyper-test/binary/hyperchain/Centos7/${package}.tar.gz
+      curl -O http://nexus.hyperchain.cn/repository/hyper-test/binary/hyperchain/Centos7/${package}.tar.gz
+      sourceDir="hyperchain2.0"
+      nodeName="hyperchain"
+    fi
+ fi
+
+
+
+  echo "prepare ${blockchain}"
+  rm -rf ${WORKSPACE}/${sourceDir}
+  rm -rf ${WORKSPACE}/certs
+  mkdir -p ${WORKSPACE}/certs
+  mkdir -p ${WORKSPACE}/${sourceDir}
+  tar zxvf ${package}.tar.gz -C ${sourceDir} --strip-components 1
+  mkdir -p ${WORKSPACE}/testEnv/0.0/node1
+  mkdir -p ${WORKSPACE}/testEnv/0.0/node2
+  mkdir -p ${WORKSPACE}/testEnv/0.0/node3
+  mkdir -p ${WORKSPACE}/testEnv/0.0/node4
+
+
+
+  curl -O http://nexus.hyperchain.cn/repository/hyper-test/certs/certs.tar.gz
+  tar zxvf certs.tar.gz
+
+  testPath="${WORKSPACE}/testEnv/0.0"
+  blockchainPath="${WORKSPACE}/${sourceDir}"
+  certsPath="${WORKSPACE}/certs"
+
+  cp -rf ${sourceDir}/*  ${blockchainPath}
+  cp -rf certs/* ${certsPath}
+  rm ${prefixpackage}${package}.tar.gz
+  rm certs.tar.gz
+
+  cd $testPath
+  # Make dir node1-$nodeN
+  for ((i = 1; i <= $nodeN; i++)); do
+    if [ -d "node$i" ]; then
+      rm -rf node$i
+    fi
+    mkdir node$i
+  done
+
+  # config nodes1-$nodeN
+  for ((i = 1; i <= $nodeN; i++)); do
+    cd $testPath/node$i/
+    cp -rf ${blockchainPath}/* .
+    #copy certs
+    rm -rf namespaces/global/certs/CA
+    rm -rf namespaces/global/certs/certs
+    cp -r ${certsPath}/node${i}/* namespaces/global/certs/
+
+    cd configuration
+    sed -ig "s/enable = true/enable = false/" whitelist.toml
+    checkPath=global/ns_static.toml
+    sed -ig "s/enable     = true/enable     = false/" ${checkPath}
+
+    pwd="${testPath}/node$i/configuration/system.toml"
+    if [ ! -f $pwd ];then
+      echo "current flato Version <= 1.0.6"
+    else
+      echo "use system.toml"
+      sed -ig "s/max_content_length = \"100kb\"/max_content_length = \"2mb\"/g" system.toml
+      sed -ig "s/maxRecvMsgSize = \"100kb\"/maxRecvMsgSize = \"2mb\"/g" system.toml
+      sed -ig "s/maxSendMsgSize = \"100kb\"/maxSendMsgSize = \"2mb\"/g" system.toml
+      sed -ig "s/streamIdle = \"5s\"/streamIdle = \"60s\"/g" system.toml
+      sed -ig "s/maxRecvMessageSize = \"50mb\"/maxRecvMessageSize = \"5000mb\"/g"  system.toml
+      sed -ig "s/maxSendMessageSize = \"50mb\"/maxSendMessageSize = \"5000mb\"/g"  system.toml
+    fi
+    #modify tcert
+    # echo "[encryption.check]" >> global/ns_static.toml
+    # echo "enableT    = false" >> global/ns_static.toml
+    sed -ig "s/enable     = true/enable     = false/" global/ns_static.toml
+    sed -ig "s/algo = \"SOLO\"/algo = \"RBFT\"/g" global/ns_dynamic.toml
+    # modify ports on dynamic.toml
+    sed -ig "s/= 8081/= 808$i/" dynamic.toml
+    sed -ig "s/= 11001/= 1100$i/" dynamic.toml
+    sed -ig "s/= 50011/= 5001$i/" dynamic.toml
+
+    # modify addrs on dynamic.toml
+    sed -ig "/self/s/node1/node$i/g" dynamic.toml
+    sed -ig "s/domain=\"domain1\"/domain=\"domain$i\"/" dynamic.toml
+    sed -ig "/domain.*127/s/50011/5001$i/g" dynamic.toml
+
+    # modify ports on debug.toml
+    sed -ig "s/10091/1009$i/" debug.toml
+    sed -ig "s/10051/1005$i/" debug.toml
+    # modify nodes on ns_dynamic.toml
+    cd global
+    sed -i "0,/hostname    = \"node1\"/s//hostname    = \"node$i\"/" ns_dynamic.toml
+    sed -ig "/^.*certs\/distributed/c ecert  = \"certs/certs\"" ns_static.toml
+  done
+  echo "src path : ${blockchainPath}"
+  echo "dec path : ${testPath}"
+  echo "Start the platform by executing the following command:"
+  echo "sh start_nodes.sh ${nodeName}"
+  startNodes ${nodeName}
+}
+
+function startNodes() {
+  cd ${testPath}
+  echo ${testPath}
+  for ((i = 1; i <= 4; i++)); do
+    cd node${i}
+    chmod +x ${1}
+    CommitNum=$(./${1} --codeVersion)
+    echo $CommitNum
+    ./${1} >node${i}.log 2>&1 &
+    sleep 2
+    cd ..
+  done
+  for ((j = 1; j <= 120; j++)); do
+    sleep 1
+    result=$(curl localhost:8081 --data '{"jsonrpc":"2.0","method": "node_getNodeStates", "namespace": "global", "id": 1}')
+    if [[ "$result" =~ "NORMAL" ]]; then
+      echo 'Nodes started successfully!'
+      echo "Spent ${j} seconds"
+      break
+    else
+      if [[ "${j}" != 120 ]]; then
+        echo "Nodes not started"
+      else
+        echo "Nodes startup failed within 120 seconds"
+        cat ${testPath}/node1/node1.log
+        exit 1
+      fi
+    fi
+  done
+
+}
+
+function prepare_hyperchain() {
+
+  testPath="/home/hyperchain/jenkins/workspace/testEnv/1.8"
+  hyperchainPath="/home/hyperchain/jenkins/workspace/Starscream/hyperchain1.8"
+
+  rm -rf ${hyperchainPath}
+  mkdir -p ${hyperchainPath}
+  mkdir -p ${testPath}/node1
+  mkdir -p ${testPath}/node2
+  mkdir -p ${testPath}/node3
+  mkdir -p ${testPath}/node4
+  pkill flatoflato00
+  pkill cedar
+  pkill hyperchain
+  jps | grep JceeServer | awk '{print $1}' | xargs kill -9
+
+  if [ ${BIN_IN_LOCAL} == "false" ]; then
+    curl -O http://nexus.hyperchain.cn/repository/hyper-test/binary/${blockchain}/Centos7/${blockchain}1.8.tar.gz
+    tar zxvf ${blockchain}1.8.tar.gz
+  fi
+
+  cp -r ${blockchain}1.8/* /home/hyperchain/jenkins/workspace/Starscream/${blockchain}1.8
+  rm ${blockchain}1.8.tar.gz
+
+  cd $testPath
+  # Make dir node1-$nodeN
+  for ((i = 1; i <= $nodeN; i++)); do
+    if [ -d "node$i" ]; then
+      rm -rf node$i
+    fi
+    mkdir node$i
+  done
+  for ((i = 1; i <= $nodeN; i++)); do
+    cd $testPath/node$i/
+    cp -rf $hyperchainPath/* .
+    # modify ports on global.toml
+    sed -ig "s/8081/808$i/" global.toml
+    sed -ig "s/9001/900$i/" global.toml
+    sed -ig "s/10001/1000$i/" global.toml
+    sed -ig "s/50081/5008$i/" global.toml
+    sed -ig "s/50051/5005$i/" global.toml
+    sed -ig "s/50011/5001$i/" global.toml
+
+    # modify addrs on addr.toml
+    sed -ig "s/domain=\"domain1\"/domain=\"domain$i\"/" addr.toml
+    sed -ig "s/50011/5001$i/g" addr.toml
+    sed -ig "s/node1/node$i/g" addr.toml
+
+    # modify ports on debug.toml
+    sed -ig "s/10091/1009$i/" debug.toml
+    sed -ig "s/10051/1005$i/" debug.toml
+
+    # modify nodes on peerconfig.toml
+    cd namespaces/global/config
+    sed -ig "3c hostname=\"node$i\"" peerconfig.toml
+  done
+  echo "src path : ${hyperchainPath}"
+  echo "dec path : ${testPath}"
+  echo "Start the platform by executing the following command:"
+  echo "sh start_nodes.sh ${blockchain}"
+}
+
+case ${blockchain} in
+"flato")
+
+  prepare_flato flato
+  ;;
+
+"hyperchain")
+  echo "hyperchain"
+  prepare_hyperchain hyperchain
+  ;;
+
+"cedar")
+  echo "cedar"
+  prepare_flato cedar
+  ;;
+"help")
+  echo "sh prepare_nodes.sh cedar --prepare cedar env"
+  echo ""
+  echo "sh prepare_nodes.sh hyperchian -- prepare hyperchain env"
+  echo ""
+  echo "sh prepare_nodes.sh flato --prepare flato env"
+  ;;
+*)
+  echo "cat script methods  by executing the following command:"
+  echo "sh prepare_nodes.sh help"
+  ;;
+
+esac
+

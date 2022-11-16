@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/checkpoint.proto";
+
+message CvpConfCmdList {
+    repeated CvpConfCmd cvpConfCmds = 1;
+    string Namespace = 2;
+}
+
+message CvpConfCmd {
+    string Method = 1;
+    string Key = 2;
+    repeated string Params = 3;
+}
+
+message CvpCmdMsg {
+    enum CmdMsgType {
+        CmdPing = 0;
+        CmdPong = 1;
+        CmdHandshake = 2;
+        CmdHandshakeResp = 3;
+        Cmd = 4;
+        CmdResp = 5;
+    }
+    CmdMsgType type = 1;
+    bytes payload = 3;
+}
+
+message CmdPing {
+    uint64 view = 1;
+    uint64 cmdID = 2;
+}
+
+message CmdPong {
+    uint64 view = 1;
+}
+
+message CmdHandshake {
+    uint64 view = 1;
+    uint64 cmdID = 2;
+    bool inited = 3;
+}
+
+message CmdHandshakeResp {
+    CvpPayload payload = 1;
+    CvpConfCheck check = 2;
+    uint64 cmdID = 3;
+    uint64 view = 4;
+}
+
+message Cmd {
+    repeated string args = 1;
+    repeated string undo = 2;
+    uint64 cmdID = 3;
+    CvpPayload payload = 4;
+}
+
+message CmdResp {
+    uint64 cmdID = 1;
+    bool success = 2;
+    string msg = 3;
+}
+
+message NamespacePayload {
+    bytes certs = 1;
+    bytes nsConfig = 2;
+    map<string, bytes> mq = 3;
+}
+
+message CvpPayload {
+    bytes sysConf = 1;
+    map<string, NamespacePayload> nsPayload = 2;
+
+    CvpConfCmdList cvpConfCmdList = 3;
+}
+
+message CvpConfCheck {
+    map<string, bool> nsStatus = 1;
+    map<string, NamespaceConfCheck> nsCheck = 2;
+}
+
+message NamespaceConfCheck {
+    uint32 encryptBitmap = 1;
+    bool indexEnabled = 2;
+    bytes layer2 = 3;
+}
+
+// bjr related
+message CVPNsMsg {
+    enum CVPNsMsgType {
+        BJRPing = 0;
+        BJRPong = 1;
+        VPCheckpoint = 2;
+        StateNegoReq = 3;
+        StateNegoResp = 4;
+        FetchRequest = 5;
+        FetchResponse = 6;
+    }
+    string nsName = 1;
+    CVPNsMsgType typ = 2;
+    bytes payload = 3;
+}
+
+message BJRPing {
+    uint64 height = 1;
+    string sender = 2;
+}
+
+message BJRPong {
+    uint64 height = 1;
+    uint64 genesis = 2;
+    string snapshotID = 3;
+}
+
+message VPCheckpoint {
+    uint64 height = 1;
+}
+
+message StateNegoReq {
+    string snapshotID = 1;
+    string sender = 2;
+}
+
+message StateNegoResp {
+    uint64 shardNum = 1;
+    uint64 snapTxSum = 2;
+    EpochInfo epochInfo = 3;
+    uint64 snapInvalidTxSum = 4;
+}
+
+enum BatchSyncType {
+    BJR = 0;
+    State = 1;
+}
+
+message BatchSyncRequest {
+    BatchSyncType typ = 1;
+    uint64 start = 2;
+    uint64 end = 3;
+    string Sender = 4;
+}
+
+message BatchSyncResponse {
+    BatchSyncType typ = 1;
+    uint64 num = 2;
+    bytes payload = 3;
+    bytes extra = 4;
+}

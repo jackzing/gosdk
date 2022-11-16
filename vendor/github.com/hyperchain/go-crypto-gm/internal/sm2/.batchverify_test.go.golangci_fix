@@ -1,0 +1,94 @@
+//go:build (amd64 || arm64) && !gmnoasm
+// +build amd64 arm64
+// +build !gmnoasm
+
+package sm2
+
+import (
+	"container/heap"
+	"crypto/rand"
+	"encoding/hex"
+	"math/big"
+	"testing"
+
+	"github.com/hyperchain/go-crypto-gm/internal/sm3"
+	"github.com/stretchr/testify/assert"
+)
+
+//sum(s*q)*G + sum(t*q*P) = sum(q*R)
+func Test2(t *testing.T) {
+	X, _ := hex.DecodeString("86d3205ed0c3db8ef35a74b6bf924cbef75988e835f65f422884e3b1c8cdbde1")
+	Y, _ := hex.DecodeString("ea7eee5e7ff177622c3081aea9375d3cfec41867298261aae8f8e1434c9e81f0")
+	h := sm3.SignHashSM3(X, Y, []byte(msg))
+	X = append(X, Y...)
+	X = append([]byte{0}, X...)
+	sig2 := []byte{0, 48, 69, 2, 32, 13, 190, 159, 134, 254, 112, 95, 175, 247, 34, 5, 132, 150, 56, 225, 46, 210, 30, 177,
+		157, 21, 183, 236, 17, 65, 204, 237, 255, 46, 57, 182, 207, 2, 33, 0, 196, 252, 200, 58, 188, 213, 181, 112, 101,
+		211, 201, 31, 210, 140, 96, 168, 47, 81, 168, 169, 229, 100, 44, 65, 148, 114, 181, 46, 68, 141, 26, 225}
+
+	res := make([]*params, 0, maxBatchSize)
+	err := preStep(&res, [][]byte{X, X}, [][]byte{sig2, sig2}, [][]byte{h, h})
+	assert.Nil(t, err)
+}
+
+func TestStep1(t *testing.T) {
+	X, _ := hex.DecodeString("86d3205ed0c3db8ef35a74b6bf924cbef75988e835f65f422884e3b1c8cdbde1")
+	Y, _ := hex.DecodeString("ea7eee5e7ff177622c3081aea9375d3cfec41867298261aae8f8e1434c9e81f0")
+	h := sm3.SignHashSM3(X, Y, []byte(msg))
+	X = append(X, Y...)
+	X = append([]byte{0}, X...)
+	sig2 := []byte{0, 48, 69, 2, 32, 13, 190, 159, 134, 254, 112, 95, 175, 247, 34, 5, 132, 150, 56, 225, 46, 210, 30, 177,
+		157, 21, 183, 236, 17, 65, 204, 237, 255, 46, 57, 182, 207, 2, 33, 0, 196, 252, 200, 58, 188, 213, 181, 112, 101,
+		211, 201, 31, 210, 140, 96, 168, 47, 81, 168, 169, 229, 100, 44, 65, 148, 114, 181, 46, 68, 141, 26, 225}
+
+	res := make([]*params, 0, maxBatchSize)
+	err := preStep(&res, [][]byte{X, X}, [][]byte{sig2, sig2}, [][]byte{h, h})
+	assert.Nil(t, err)
+
+	a := sm2Point{}
+	res[0].q = uint64(1)
+	res[1].q = uint64(1)
+	step1BaseScalar(&a, res)
+}
+
+//sum(t*q*P)
+func TestStep3Scalar(t *testing.T) {
+	for i := 0; i < 1; i++ {
+		X, _ := hex.DecodeString("86d3205ed0c3db8ef35a74b6bf924cbef75988e835f65f422884e3b1c8cdbde1")
+		Y, _ := hex.DecodeString("ea7eee5e7ff177622c3081aea9375d3cfec41867298261aae8f8e1434c9e81f0")
+		h := sm3.SignHashSM3(X, Y, []byte(msg))
+		X = append(X, Y...)
+		X = append([]byte{0}, X...)
+		sig2 := []byte{0, 48, 69, 2, 32, 13, 190, 159, 134, 254, 112, 95, 175, 247, 34, 5, 132, 150, 56, 225, 46, 210, 30, 177,
+			157, 21, 183, 236, 17, 65, 204, 237, 255, 46, 57, 182, 207, 2, 33, 0, 196, 252, 200, 58, 188, 213, 181, 112, 101,
+			211, 201, 31, 210, 140, 96, 168, 47, 81, 168, 169, 229, 100, 44, 65, 148, 114, 181, 46, 68, 141, 26, 225}
+
+		res := make([]*params, 0, maxBatchSize)
+		err := preStep(&res, [][]byte{X, X}, [][]byte{sig2, sig2}, [][]byte{h, h})
+		assert.Nil(t, err)
+
+		a, b := sm2Point{}, sm2Point{}
+		pre := 1
+		res[0].q = uint64(1)
+		res[1].q = uint64(1)
+		step3Scalar(&a, res)
+		for _, v := range res[:2] {
+			double := sm2Point{}
+			temp := [4]uint64{}
+			smallOrderMul(&temp, &RRN, &v.q) //toMont
+			orderMul(&temp, &temp, &v.t)
+			getScalar(&temp)
+			v.p.sm2ScalarMult(temp[:])
+
+			now := scalarIsZero(&temp)
+			j := b
+			isEqual := sm2PointAdd2Asm(&b.xyz, &j.xyz, &v.p.xyz)
+			sm2PointDouble2Asm(&double.xyz, &v.p.xyz)
+			b.copyConditional(&double, isEqual)
+			b.copyConditional(&v.p, pre)
+			b.copyConditional(&j, now)
+			if pre != 1 || now != 1 {
+				pre = 0
+			}
+
+		}

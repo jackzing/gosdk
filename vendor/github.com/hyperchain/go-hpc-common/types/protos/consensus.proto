@@ -1,0 +1,171 @@
+// Hyperchain License
+// Copyright (C) 2016-2019 The Hyperchain Authors.
+
+syntax = "proto3";
+
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/transaction.proto";
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+// This structure serves a dual purpose.
+//
+// First, if this structure is signed by 2f+1 validators it signifies the state of the ledger at
+// given checkpoint -- it contains the ledger accumulator hash at that height which commits to
+// all historical transactions. This structure may be expanded to include other information that
+// is derived from that accumulator (e.g. the current time according to the time contract) to
+// reduce the number of proofs a client must get.
+//
+// Second, the structure contains a `consensus_data_hash` value. This is the hash of an internal
+// data structure that represents a block that is voted on in HotStuff. If 2f+1 signatures are
+// gathered on the same ledger info that represents a Quorum Certificate (QC) on the consensus
+// data.
+message LedgerInfo {
+  option (gogoproto.goproto_stringer) = false;
+
+  // Potential committed block info used in HotStuff consensus.
+  ConsensusBlockInfo commit_info = 1;
+
+  // Hash of consensus-specific data that is opaque to all parts of the system
+  // other than consensus. This is needed to verify signatures because
+  // consensus signing includes this hash.
+  string consensus_data_hash = 2;
+}
+
+// This structure contains all the information needed for tracking a block
+// without having access to the block. It assumes that the block is the
+// last block executed within the ledger.
+message ConsensusBlockInfo {
+  option (gogoproto.goproto_stringer) = false;
+
+  // Epoch number corresponds to the set of validators that are active for this block.
+  uint64 epoch = 1;
+  // The round of a block is an internal monotonically increasing counter used by Consensus
+  // protocol.
+  uint64 round = 2;
+  // The identifier (hash) of the block.
+  string id = 3;
+  // TODO(DH): use to track ledger height?
+  uint64 height = 4;
+  // The timestamp this block was proposed by a proposer.
+  int64 timestamp_nanos = 5;
+  // An optional field containing the set of validators for the start of the next epoch
+  bool reconfiguration = 6;
+  // An optional field records whether block is a proof block
+  bool proof = 7;
+}
+
+// The validator node returns this structure which includes signatures
+// from each validator to confirm the state.  The client needs to only pass
+// back the LedgerInfo element since the validator node doesn't need to know
+// the signatures again when the client performs a query, those are only there
+// for the client to be able to verify the state
+message LedgerInfoWithSignatures {
+  option (gogoproto.goproto_stringer) = false;
+
+  // The validator is identified by its account address: in order to verify a signature
+  // one needs to retrieve the public key of the validator for the given epoch.
+  map<string, bytes> signatures = 1;
+
+  // detailed ledger info.
+  LedgerInfo ledger_info = 2;
+}
+
+// QuorumCert contains the quorum certified information of certain proposal.
+message QuorumCert {
+  option (gogoproto.goproto_stringer) = false;
+  // The vote information certified by the quorum.
+  VoteData vote_data = 1;
+  // LedgerInfo with at least 2f+1 signatures. The LedgerInfo's consensus data
+  // hash is a digest that covers vote data hash.
+  LedgerInfoWithSignatures signed_ledger_info = 2;
+}
+
+// VoteData keeps the information about the block, and its parent.
+message VoteData {
+  option (gogoproto.goproto_stringer) = false;
+  // Contains all the block information needed for voting for the proposed round.
+  ConsensusBlockInfo proposed = 1;
+  // Contains all the block information for the parent for the proposed round.
+  ConsensusBlockInfo parent = 2;
+}
+
+// InnerBlock has the core data of a consensus block that should be persistent when necessary.
+// Each block must know the id of its parent and keep the QuorumCertificate to that parent.
+message InnerBlock {
+  option (gogoproto.goproto_stringer) = false;
+  // This block's id as a hash value
+  string id = 1;
+  // The container for the actual block
+  BlockData block_data = 2;
+  // Signature that the hash of this block has been authored by the owner of the
+  // private key.
+  bytes signature = 3;
+}
+
+// Block has the core data of a consensus block that should be persistent when necessary.
+// Each block must know the id of its parent and keep the QuorumCertificate to that parent.
+// Currently, we use batch-noxbft, in which proposed block should only contains payload
+// (hash list of transactions) rather than transactions entries, as a result, we can save
+// network bandwidth of proposers.
+message BlockData {
+  // Epoch number corresponds to the set of validators that are active for this block.
+  uint64 epoch = 1;
+  // The round of a block is an internal monotonically increasing counter used by consensus
+  // protocol.
+  uint64 round = 2;
+  // The approximate physical time a block is proposed by a proposer.
+  // It makes the following guarantees:
+  // 1. Time Monotonicity: Time is monotonically increasing in the block
+  //    chain. (i.e. If H1 < H2, H1.Time < H2.Time).
+  // 2. If a block of transactions B is agreed on with timestamp T, then at least f+1
+  //    honest replicas think that T is in the past.  An honest replica will only vote
+  //    on a block when its own clock >= timestamp T.
+  // 3. If a block of transactions B is agreed on with timestamp T, then at least f+1 honest
+  //    replicas saw the contents of B no later than T + delta for some delta.
+  //    If T = 3:00 PM and delta is 10 minutes, then an honest replica would not have
+  //    voted for B unless its clock was between 3:00 PM to 3:10 PM at the time the
+  //    proposal was received.  After 3:10 PM, an honest replica would no longer vote
+  //    on B, noting it was too far in the past.
+  int64 timestamp_nanos = 3;
+  // Parent block id of this block as a hash value (all zeros to indicate the
+  // genesis block)
+  string parent_id = 4;
+  // Contains the quorum certified ancestor and whether the quorum certified
+  // ancestor was voted on successfully
+  QuorumCert quorum_cert = 5;
+  // Payload of the proposed block (include transaction digest(s) for batch-noxbft protocol)
+  repeated bytes payload = 6;
+  // Transactions of the proposed block which are matched payload digest(s)
+  repeated Transaction transactions = 7;
+  // Author of the block that can be validated by the author's public key and
+  // the signature
+  string author = 8;
+  // Type of the block, including NORMAL,NIL,GENESIS,PROOF
+  enum Type {
+    // Normal blocks are used for proposals
+    NORMAL = 0;
+    // NIL blocks don't have authors or signatures: they're generated upon timeouts to fill in the
+    // gaps in the rounds.
+    NIL = 1;
+    // A genesis block is the first committed block in any epoch that is identically constructed on
+    // all validators by any (potentially different) LedgerInfo that justifies the epoch change
+    // from the previous epoch.  The genesis block is used as the the first root block of the
+    // BlockTree for all epochs.
+    GENESIS = 2;
+    // Config blocks are special proposal blocks, they allow two situations:
+    //
+    // 1. If it is the first config block and its parent is not a config block, then it needs to contain
+    // config transaction (only allow one include currently).
+    //
+    // 2. If it is the child block of config blocks, then it must be an empty block.
+    CONFIG = 3;
+    // Proof blocks are special empty blocks and used to enforce checkpoint generation.
+    // The proposer proposal proof blocks if checkpoints have not been generated for a lone time.
+    PROOF = 4;
+  }
+  // Type of the block, including NORMAL,NIL,GENESIS,PROOF
+  Type block_type = 9;
+}

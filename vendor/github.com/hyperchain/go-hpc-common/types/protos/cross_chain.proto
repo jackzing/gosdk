@@ -1,0 +1,145 @@
+syntax = "proto3";
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/transaction.proto";
+
+// in receipt result
+message CrossChainMeta {
+    string crossChainID = 1;
+    int32 stage = 2;
+}
+
+message BusinessCallData {
+    string methodName = 1;
+    repeated string paramTypes = 2;
+    repeated string paramValues = 3;
+}
+
+message CrossChainContractResult {
+    string ret = 1; // user defined return value
+    bool success = 2; // cross chain tx execution result
+    string targetNs = 3;
+    string targetContract = 4;
+    BusinessCallData callData = 5; // subsequential target ns calldata
+    BusinessCallData rollback = 6; // current method corresponding rollback calldata
+    // contract return value will not contain this field, but follwing logic need this information
+    CrossChainMeta meta = 7;
+}
+
+message AnchorContractResult {
+    enum Op {
+        REGISTER = 0;
+        UNREGISTER = 1;
+        REPLACE = 2;
+    }
+
+    bool success = 1; // cross chain tx execution result
+    string execNamespace = 2; // system or other namespace
+    int32 stage = 3;
+    Op op = 4;
+    // register
+    string regHostname = 5;
+    string regNamespace = 6;
+
+    // unregister
+    string unregHostname = 7;
+    string unregNamespace = 8;
+
+    // replace
+    string oldHostname = 9;
+    string newHostname = 10;
+    string oldNamespace = 11;
+    string newNamespace = 12;
+}
+
+// cm parse CrossChainTx, send it to related cm single
+message CrossChainTx {
+    Transaction tx = 1;
+    CrossChainContractResult res = 2;
+    TimeoutResult timeoutRes = 3;
+    bytes proof = 4;
+}
+
+message AnchorTx {
+    Transaction tx = 1;
+    AnchorContractResult res = 2;
+    bytes proof = 3;
+}
+
+// cmc send to cm
+
+// CrossChainEvent holds CrossChainTx generated in a block
+message CrossChainEvent {
+    uint64 seqNo = 1;
+    repeated CrossChainTx txs = 2;
+    AnchorTx tx = 3;
+    TimeoutTx ttx = 4;
+}
+
+// CrossChainCheckpoint holds CrossChainEvent between two stable checkpoints.
+message CrossChainCheckpoint {
+    string namespace = 1;
+    uint64 prev = 2;
+    uint64 now = 3;
+    repeated CrossChainEvent events = 4;
+}
+
+message CrossChainExtra {
+    string crossChainID = 1;
+    int32 stage = 2;
+    bytes extra = 3;
+}
+
+message TxParam {
+    bytes toAddr = 1;
+    bytes payload = 2;
+    Transaction.TxType txType = 3;
+    TransactionValue.VmType vmType = 4;
+    bytes extra = 5;
+    int64 timestamp = 6;
+}
+
+message TxToSend {
+    Transaction tx = 1;
+    string targetNs = 2;
+    enum TxToSendStatus {
+        TOSEND = 0;
+        SENT = 1;
+    }
+    TxToSendStatus status = 3;
+    TxParam params = 4;
+}
+
+// user called TimeoutTx
+message TimeoutTx {
+    Transaction tx = 1;
+    TimeoutResult res = 2;
+    bytes proof = 3;
+}
+
+message TimeoutResult {
+    // 如果要构造构造后序交易，则依赖这个数据来构造
+    CrossChainContractResult result = 1;
+    string crossChainID = 2;
+    // 被timeout状态拦截到的交易阶段，可以分析出需要哪个namespace参与，同时可以确定是要构造后序交易，还是需要直接操作log
+    int32 triggerTimeoutStage = 3;
+}
+
+message TimeoutStatus {
+    enum ConfirmStatus {
+        IRRELAVENT = 0;
+        UNCONFIRMED = 1;
+        CONFIRMED = 2;
+    }
+    enum ResultStatus {
+        NONVALUE = 0;
+        SUCCESS = 1;
+        FAIL = 2;
+    }
+    ConfirmStatus fromConfirm = 1;
+    ResultStatus fromResult = 2;
+    ConfirmStatus toConfirm = 3;
+    ResultStatus toResult = 4;
+}

@@ -1,0 +1,92 @@
+syntax = "proto3";
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+// This message type is used between consensus and outside
+message SessionMessage {
+    enum Type {
+        NODE_STATE_REQUEST = 0;
+        NODE_STATE_RESPONSE = 1;
+        REMOVE_VP = 2;
+        REMOVE_NVP = 3;
+        NVP_UPGRADE = 4;
+        RBFT_MESSAGE = 5;
+        RAFT_MESSAGE = 6;
+        RAFT_SERVICE_MESSAGE = 7;
+        PEER_POOL_MESSAGE = 8;
+
+        // sync_chain new version messgae
+        EXEC_SNYC_CHAIN = 9;
+        EXEC_UNICAST_INVALID = 10;
+        EXEC_SYNC_COMMIT = 11;
+
+        // nvp
+        NVP_MESSAGE = 12;
+        NVP_RELAY = 13;
+
+        // Cert handshake
+        REQUESTENTER = 17;
+        ENTERREJECT = 18;
+        CLIENTCERT = 19;
+        SERVERCERT = 20;
+        CLIENTDONE = 21;
+
+        // cvp
+        CVP_BLOCKPROCESS = 22;
+        CVP_COMMAND = 23;
+
+        // Azolla
+        NOXBFT_MESSAGE = 24;
+        MEMPOOL_MESSAGE = 25;
+        STATE_SYNC_MESSAGE = 26;
+
+        // vp
+        TX_RELAY = 27;
+    }
+    Type type = 1;
+    bytes payload = 2;
+}
+
+message PeerMessage {
+    enum Type {
+        // refactored nvp
+        PEER_BLOCK = 0;
+        PEER_BLOCK_ACK = 1;
+        PEER_ROLLBACK = 2;
+        PEER_ROLLBACK_ACK = 3;
+        PEER_CHECKPOINT = 4;
+        PEER_PING = 5;
+        PEER_PONG = 6;
+        PEER_HANDSHAKE = 7;
+        PEER_HANDSHAKE_RESP = 8;
+        PEER_LEDGER_PACKET = 9;
+        PEER_LEDGER_PACKET_ACK = 10;
+        PEER_GENESIS = 11;
+        PEER_DISCONNECT = 12;
+        PEER_DISCONNECT_ACK = 13;
+        PEER_CVP_PING = 14;
+        PEER_CVP_PONG = 15;
+        PEER_CVP_HANDSHAKE = 16;
+        PEER_CVP_HANDSHAKE_RESP = 17;
+        PEER_CVP_CMD = 18;
+        PEER_CVP_CMD_RESP = 19;
+        PEER_HPC_BLOCK = 20;
+        PEER_HPC_BLOCK_ACK = 21;
+        PEER_QC = 22;
+        PEER_QC_ACK = 23;
+    }
+    Type type = 1;
+    bytes payload = 2;
+    string namespace = 3;
+}
+
+message SyncChainMessage {
+    enum Type{
+        BLOCK_HEADER_REQUEST = 0;
+        BLOCK_HEADER_RESPONSE = 1;
+        BLOCK_REQUEST = 2;
+    }
+    Type type = 1;
+    bytes payload = 2;
+}

@@ -1,0 +1,37 @@
+syntax = "proto3";
+package protos;
+
+option go_package = "github.com/hyperchain/go-hpc-common/types/protos";
+
+import "github.com/hyperchain/go-hpc-common/types/protos/transaction.proto";
+import "github.com/hyperchain/go-hpc-common/types/protos/consensus.proto";
+
+message Block {
+  bytes version = 1;
+  bytes parentHash = 2;
+  bytes blockHash = 3;
+  repeated Transaction transactions = 4;
+  int64 timestamp = 5;
+  bytes merkleRoot = 6;
+  bytes txRoot = 7;
+  bytes receiptRoot = 8;
+  uint64 number = 9;
+  int64 writeTime = 10;
+  int64 commitTime = 11;
+  int64 evmTime = 12;
+  bytes bloom = 13;
+  repeated InvalidTransactionRecord invalidRecords = 14;
+  bytes invalidRoot = 15;
+  QuorumCert quorumCert = 16;
+  string Author = 17;
+  bytes Signature = 18;
+}
+
+message Blocks{
+  repeated Block batch = 1;
+}
+
+message BlockWrapper {
+  bytes blockVersion = 1;
+  bytes block = 2;
+}
