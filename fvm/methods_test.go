@@ -2,8 +2,8 @@ package fvm
 
 import (
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/fvm/scale"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/fvm/scale"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

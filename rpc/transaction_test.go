@@ -2,10 +2,10 @@ package rpc
 
 import (
 	_ "embed"
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/bvm"
-	"github.com/hyperchain/gosdk/common/hexutil"
-	"github.com/hyperchain/gosdk/kvsql"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/bvm"
+	"github.com/jackzing/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/kvsql"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

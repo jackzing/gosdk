@@ -3,7 +3,7 @@ package abi2
 import (
 	"bytes"
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"reflect"
 )
 

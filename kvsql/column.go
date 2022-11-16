@@ -1,8 +1,8 @@
 package kvsql
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/types"
-	"github.com/hyperchain/gosdk/kvsql/util/hack"
+	"github.com/jackzing/gosdk/kvsql/types"
+	"github.com/jackzing/gosdk/kvsql/util/hack"
 	"time"
 	"unsafe"
 )

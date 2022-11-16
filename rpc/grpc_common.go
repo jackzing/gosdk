@@ -12,8 +12,8 @@ import (
 	"github.com/hyperchain/go-hpc-common/utils"
 	"github.com/hyperchain/go-hpc-msp/plugin"
 	"github.com/hyperchain/go-hpc-msp/tls"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/grpc/pool"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/grpc/pool"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"

@@ -18,7 +18,7 @@ package abi
 
 import (
 	"github.com/davecgh/go-spew/spew"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"math/big"
 	"reflect"
 	"testing"

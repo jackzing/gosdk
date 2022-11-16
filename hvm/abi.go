@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/parallel"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/parallel"
 )
 
 // Version abi version.

@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"github.com/gogo/protobuf/proto"
 	"github.com/hyperchain/go-hpc-common/types/protos"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/mholt/archiver/v3"
 	"github.com/opentracing/opentracing-go/log"
 	"io/ioutil"

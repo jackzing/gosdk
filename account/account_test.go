@@ -7,7 +7,7 @@ import (
 	inter "github.com/hyperchain/go-crypto-standard"
 	"github.com/hyperchain/go-crypto-standard/asym"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"testing"

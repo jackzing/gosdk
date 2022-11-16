@@ -30,7 +30,7 @@ import (
 
 	"path"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 var (

@@ -18,7 +18,7 @@ package abi2
 
 import (
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"math/big"
 	"reflect"
 	"testing"

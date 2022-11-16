@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/hyperchain/go-hpc-common/types/protos"
-	"github.com/hyperchain/gosdk/grpc/pool"
+	"github.com/jackzing/gosdk/grpc/pool"
 )
 
 type VersionGrpc struct {

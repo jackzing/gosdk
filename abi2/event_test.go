@@ -21,7 +21,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"math/big"
 	"reflect"
 	"strings"

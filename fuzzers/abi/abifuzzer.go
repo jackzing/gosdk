@@ -18,13 +18,13 @@ package abi
 
 import (
 	"fmt"
-	//"github.com/hyperchain/gosdk/abi"
+	//"github.com/jackzing/gosdk/abi"
 	"reflect"
 	"strings"
 
 	//"github.com/ethereum/go-ethereum/accounts/abi"
 	fuzz "github.com/google/gofuzz"
-	abi "github.com/hyperchain/gosdk/abi2"
+	abi "github.com/jackzing/gosdk/abi2"
 )
 
 var (

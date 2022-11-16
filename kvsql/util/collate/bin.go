@@ -1,7 +1,7 @@
 package collate
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/util/stringutil"
+	"github.com/jackzing/gosdk/kvsql/util/stringutil"
 	"strings"
 )
 

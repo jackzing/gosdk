@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

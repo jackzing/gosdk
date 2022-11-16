@@ -21,7 +21,7 @@ import (
 	"github.com/hyperchain/go-crypto-standard/hash"
 	"strings"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // Event is an event potentially triggered by the EVM's LOG mechanism. The Event

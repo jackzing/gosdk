@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/hyperchain/go-crypto-standard/asym"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/account"
 	"github.com/stretchr/testify/assert"
 )
 

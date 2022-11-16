@@ -2,7 +2,7 @@ package bvm
 
 import (
 	"bytes"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // EncodeOperation encode operation to payload for bvm

@@ -1,7 +1,7 @@
 package kvsql
 
 import (
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/common/hexutil"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

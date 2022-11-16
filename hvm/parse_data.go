@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/hyperchain/gosdk/classfile"
+	"github.com/jackzing/gosdk/classfile"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/opentracing/opentracing-go/log"
 	"github.com/syndtr/goleveldb/leveldb"

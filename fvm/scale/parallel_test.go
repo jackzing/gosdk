@@ -1,7 +1,7 @@
 package scale
 
 import (
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	_ "net/http/pprof"
 	"strings"

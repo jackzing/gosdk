@@ -13,10 +13,10 @@ import (
 
 	"github.com/hyperchain/go-hpc-common/types"
 	"github.com/hyperchain/go-hpc-common/utils"
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/config"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/config"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/spf13/viper"
 )
 

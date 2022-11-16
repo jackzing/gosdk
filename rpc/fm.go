@@ -3,7 +3,7 @@ package rpc
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/account"
 	"syscall"
 
 	"github.com/pkg/errors"

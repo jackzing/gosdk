@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"github.com/hyperchain/go-crypto-standard/asym"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"strings"
 	"testing"
 
-	"github.com/hyperchain/gosdk/abi"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/abi"
+	"github.com/jackzing/gosdk/account"
 )
 
 func generateAccount() *account.ECDSAKey {

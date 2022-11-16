@@ -159,7 +159,7 @@ func TestData(t *testing.T) {
 
 func TestHyperList(t *testing.T) {
 	t.Skip()
-	decompressJar, err := DecompressJar("/Users/dong/go/src/github.com/hyperchain/gosdk/hvm/test-jar/J2sTest-1.0-SNAPSHOT-Hyperlist.jar")
+	decompressJar, err := DecompressJar("/Users/dong/go/src/github.com/jackzing/gosdk/hvm/test-jar/J2sTest-1.0-SNAPSHOT-Hyperlist.jar")
 	if err != nil {
 		panic(err)
 	}

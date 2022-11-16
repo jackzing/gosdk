@@ -3,7 +3,7 @@ package abi
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	"math/big"
 	"reflect"

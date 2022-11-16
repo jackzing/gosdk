@@ -8,8 +8,8 @@ import (
 	"github.com/hyperchain/go-crypto-standard/ed25519"
 	"github.com/hyperchain/go-crypto-standard/hash"
 	"github.com/hyperchain/go-hpc-msp/plugin/software"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/hexutil"
 	"github.com/meshplus/crypto"
 	"strings"
 )

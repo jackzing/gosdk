@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/hyperchain/gosdk/common/math"
+	"github.com/jackzing/gosdk/common/math"
 )
 
 var (

@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/hyperchain/gosdk/common/parallel"
+	"github.com/jackzing/gosdk/common/parallel"
 
 	"github.com/hyperchain/go-hpc-common/types"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 const (

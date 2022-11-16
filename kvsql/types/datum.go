@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/util/hack"
+	"github.com/jackzing/gosdk/kvsql/util/hack"
 	"math"
 	"time"
 )

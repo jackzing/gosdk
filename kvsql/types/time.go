@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/hyperchain/gosdk/kvsql/mysql"
+	"github.com/jackzing/gosdk/kvsql/mysql"
 	"math"
 	"strconv"
 	gotime "time"

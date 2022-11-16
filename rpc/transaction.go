@@ -12,16 +12,16 @@ import (
 
 	"github.com/hyperchain/go-hpc-common/types"
 	"github.com/hyperchain/go-hpc-common/types/protos"
-	"github.com/hyperchain/gosdk/bvm"
-	"github.com/hyperchain/gosdk/common/hexutil"
-	"github.com/hyperchain/gosdk/kvsql"
+	"github.com/jackzing/gosdk/bvm"
+	"github.com/jackzing/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/kvsql"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/account"
 
-	"github.com/hyperchain/gosdk/abi"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/abi"
+	"github.com/jackzing/gosdk/common"
 )
 
 // VMType vm type, could by evm and jvm

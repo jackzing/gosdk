@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/parallel"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/parallel"
 )
 
 type MutexElement struct {

@@ -18,8 +18,8 @@ import (
 	"github.com/hyperchain/go-hpc-msp/plugin"
 	"github.com/hyperchain/go-hpc-msp/plugin/software"
 	"github.com/hyperchain/go-hpc-msp/tls"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/config"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/config"
 )
 
 type RequestType string

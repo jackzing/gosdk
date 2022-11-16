@@ -2,7 +2,7 @@ package bvm
 
 import (
 	"github.com/gogo/protobuf/proto"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

@@ -18,8 +18,8 @@ import (
 	pkcs12 "github.com/hyperchain/go-hpc-msp/pfx"
 	"github.com/hyperchain/go-hpc-msp/plugin/software"
 
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/math"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/math"
 )
 
 const (

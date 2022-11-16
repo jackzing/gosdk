@@ -21,7 +21,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/common/hexutil"
 )
 
 // Tests that data bitset encoding and decoding works and is bijective.

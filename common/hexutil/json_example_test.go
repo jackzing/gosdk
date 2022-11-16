@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/common/hexutil"
 )
 
 type MyType [5]byte

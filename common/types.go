@@ -26,7 +26,7 @@ import (
 	"strings"
 
 	"errors"
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/common/hexutil"
 )
 
 // Lengths of hashes and addresses in bytes.

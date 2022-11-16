@@ -10,8 +10,8 @@ import (
 	gm "github.com/hyperchain/go-crypto-gm"
 	"github.com/hyperchain/go-crypto-standard/asym"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/common"
 	"io/ioutil"
 	"strings"
 )

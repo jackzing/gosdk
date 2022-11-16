@@ -19,8 +19,8 @@ package abi2
 import (
 	"errors"
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/math"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/math"
 	"math/big"
 	"reflect"
 )

@@ -1,7 +1,7 @@
 package hvm
 
 import (
-	"github.com/hyperchain/gosdk/classfile"
+	"github.com/jackzing/gosdk/classfile"
 	"github.com/syndtr/goleveldb/leveldb"
 	"strings"
 )

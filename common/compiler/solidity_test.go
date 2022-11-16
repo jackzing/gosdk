@@ -23,7 +23,7 @@ import (
 	"path"
 	"testing"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 const solcVersion = "0.1.1"
@@ -100,7 +100,7 @@ func TestSaveInfo(t *testing.T) {
 	if err != nil {
 		t.Errorf("%v", err)
 	}
-	filename := path.Join(common.GetGoPath()+"/src/github.com/hyperchain/gosdk/common/compiler", "solctest.info.json")
+	filename := path.Join(common.GetGoPath()+"/src/github.com/jackzing/gosdk/common/compiler", "solctest.info.json")
 	defer os.Remove(filename)
 	cinfohash, err := SaveInfo(&cinfo, filename)
 	if err != nil {

@@ -1,7 +1,7 @@
 package fvm
 
 import (
-	"github.com/hyperchain/gosdk/fvm/scale"
+	"github.com/jackzing/gosdk/fvm/scale"
 	"io"
 )
 

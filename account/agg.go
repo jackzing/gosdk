@@ -6,7 +6,7 @@ import (
 	"fmt"
 	gm "github.com/hyperchain/go-crypto-gm"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 type AggSigner struct {

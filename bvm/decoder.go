@@ -3,7 +3,7 @@ package bvm
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // Result represent the execute result of BVM

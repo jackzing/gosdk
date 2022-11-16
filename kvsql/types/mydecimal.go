@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/mysql"
-	"github.com/hyperchain/gosdk/kvsql/util/errortype"
+	"github.com/jackzing/gosdk/kvsql/mysql"
+	"github.com/jackzing/gosdk/kvsql/util/errortype"
 	"github.com/pkg/errors"
 	"math"
 	"strconv"

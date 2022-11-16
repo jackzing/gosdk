@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hyperchain/go-hpc-common/types"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 )
 

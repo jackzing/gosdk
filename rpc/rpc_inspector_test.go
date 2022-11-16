@@ -2,10 +2,10 @@ package rpc
 
 import (
 	"fmt"
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/bvm"
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/hvm"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/bvm"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/hvm"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

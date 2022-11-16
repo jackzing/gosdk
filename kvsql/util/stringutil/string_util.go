@@ -3,7 +3,7 @@ package stringutil
 import (
 	"errors"
 	"fmt"
-	"github.com/hyperchain/gosdk/kvsql/util/hack"
+	"github.com/jackzing/gosdk/kvsql/util/hack"
 )
 
 // ErrSyntax indicates that a value does not have the right syntax for the target type.

@@ -26,7 +26,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/require"
 )
 

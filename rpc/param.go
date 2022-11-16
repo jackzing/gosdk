@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"encoding/json"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // QueryTxRange packaged query transaction by block number range

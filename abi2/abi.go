@@ -22,7 +22,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"io"
 	"strings"
 )

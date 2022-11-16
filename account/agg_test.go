@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	gm "github.com/hyperchain/go-crypto-gm"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/meshplus/crypto"
 	"github.com/stretchr/testify/assert"
 	"testing"

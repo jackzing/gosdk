@@ -20,8 +20,8 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/hyperchain/gosdk/common"
-	"github.com/hyperchain/gosdk/common/math"
+	"github.com/jackzing/gosdk/common"
+	"github.com/jackzing/gosdk/common/math"
 )
 
 // packBytesSlice packs the given bytes as [L, V] as the canonical representation

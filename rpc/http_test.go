@@ -2,7 +2,7 @@ package rpc
 
 import (
 	"fmt"
-	"github.com/hyperchain/gosdk/config"
+	"github.com/jackzing/gosdk/config"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

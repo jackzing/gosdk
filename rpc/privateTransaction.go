@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"github.com/buger/jsonparser"
 	"github.com/hyperchain/go-crypto-standard/hash/sha3"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/account"
 	"strconv"
 	"strings"
 
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // PrivateTransactionRawData is raw private transaction extra field

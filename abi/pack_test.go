@@ -18,7 +18,7 @@ package abi
 
 import (
 	"bytes"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"math"
 	"math/big"
 	"reflect"

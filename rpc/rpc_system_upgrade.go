@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/hyperchain/go-hpc-common/types"
-	"github.com/hyperchain/gosdk/bvm"
+	"github.com/jackzing/gosdk/bvm"
 )
 
 func (rpc *RPC) GetTxVersionByID(id int) (string, StdError) {

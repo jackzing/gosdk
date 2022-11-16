@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/hashicorp/go-uuid"
 	"github.com/hyperchain/go-hpc-common/types"
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/common/hexutil"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/common/hexutil"
 	"strconv"
 	"strings"
 )

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	gm "github.com/hyperchain/go-crypto-gm"
 	csHash "github.com/hyperchain/go-crypto-standard/hash"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

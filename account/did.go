@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/hyperchain/go-crypto-standard/asym"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 )
 
 // NewDIDAccountJson generate account json by account type

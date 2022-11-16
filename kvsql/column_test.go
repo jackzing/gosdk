@@ -1,7 +1,7 @@
 package kvsql
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/types"
+	"github.com/jackzing/gosdk/kvsql/types"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

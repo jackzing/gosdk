@@ -1,7 +1,7 @@
 package pool
 
 import (
-	"github.com/hyperchain/gosdk/config"
+	"github.com/jackzing/gosdk/config"
 	"github.com/spf13/viper"
 	"strings"
 	"time"

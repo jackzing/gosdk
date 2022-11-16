@@ -2,7 +2,7 @@ package abi
 
 import (
 	"fmt"
-	"github.com/hyperchain/gosdk/common"
+	"github.com/jackzing/gosdk/common"
 	"math/big"
 	"reflect"
 	"strconv"

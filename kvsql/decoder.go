@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/hyperchain/gosdk/kvsql/mysql"
-	"github.com/hyperchain/gosdk/kvsql/util/hack"
+	"github.com/jackzing/gosdk/kvsql/mysql"
+	"github.com/jackzing/gosdk/kvsql/util/hack"
 	"math"
 	"unsafe"
 )

@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"github.com/hyperchain/gosdk/account"
-	"github.com/hyperchain/gosdk/bvm"
+	"github.com/jackzing/gosdk/account"
+	"github.com/jackzing/gosdk/bvm"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

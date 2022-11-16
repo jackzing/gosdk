@@ -1,5 +1,4 @@
 module github.com/jackzing/gosdk
-
 require (
 	github.com/buger/jsonparser v1.1.1
 	github.com/davecgh/go-spew v1.1.1

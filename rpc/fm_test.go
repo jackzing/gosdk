@@ -3,7 +3,7 @@ package rpc
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/hyperchain/gosdk/account"
+	"github.com/jackzing/gosdk/account"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"os"

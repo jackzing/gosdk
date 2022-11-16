@@ -1,7 +1,7 @@
 package kvsql
 
 import (
-	"github.com/hyperchain/gosdk/kvsql/types"
+	"github.com/jackzing/gosdk/kvsql/types"
 )
 
 // Row represents a row of data, can be used to access values.
